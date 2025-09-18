@@ -1,0 +1,274 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Интернет-магазин",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://example.com/api/v1"
+    }
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": "Получение списка товаров для витрины",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "Количество элементов на странице"
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "Номер страницы"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список товаров",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Productlist"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Подробная информация о продукте",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Идентификатор продукта"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о продукте",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Продукт не найден"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "Получение корзины пользователя",
+        "responses": {
+          "200": {
+            "description": "Корзина пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingCart"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Добавление товара в корзину",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartItem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Товар успешно добавлен в корзину",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Товар успешно добавлен в корзину."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Productlist": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 65743757
+          },
+          "name": {
+            "type": "string",
+            "example": "Футболка женская Телодвижение"
+          },
+          "price": {
+            "type": "number",
+            "example": 2499
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 5,
+            "example": 4.8,
+            "description": "Рейтинг товара пользователями"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://image/1"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "price"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 65743757
+          },
+          "name": {
+            "type": "string",
+            "example": "Футболка женская Телодвижение"
+          },
+          "price": {
+            "type": "number",
+            "example": 2499
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 5,
+            "example": 4.8,
+            "description": "Рейтинг товара пользователями"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://image/1"
+          },
+          "colors": {
+            "type": "string",
+            "example": "белый"
+          },
+          "material": {
+            "type": "string",
+            "example": "хлопок 100 %"
+          },
+          "availability": {
+            "type": "boolean",
+            "example": true
+          },
+          "size": {
+            "type": "string",
+            "example": "s"
+          }
+        }
+      },
+      "CartItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "example": 65743757
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Футболка женская Телодвижение"
+          },
+          "price": {
+            "type": "number",
+            "example": 2499
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 5,
+            "example": 4.8,
+            "description": "Рейтинг товара пользователями"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://image/1"
+          },
+          "size": {
+            "type": "string",
+            "example": "s"
+          }
+        },
+        "required": [
+          "productId",
+          "quantity"
+        ]
+      },
+      "ShoppingCart": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          },
+          "totalPrice": {
+            "type": "number",
+            "example": 2499
+          }
+        }
+      }
+    }
+  }
+}
